@@ -1,0 +1,230 @@
+.book-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 0;
+}
+
+.book-row {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.book-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+}
+
+/* Animation gauche vers droite */
+.track-left {
+  animation: scrollLeft 60s linear infinite;
+}
+
+/* Animation droite vers gauche */
+.track-right {
+  animation: scrollRight 60s linear infinite;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-33.33%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.book-card {
+  flex-shrink: 0;
+  width: 150px;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(201, 162, 39, 0.1);
+  transition: all 0.4s ease;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.book-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.book-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  z-index: 2;
+}
+
+.book-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.book-card:hover {
+  transform: scale(1.1) rotateY(10deg);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(201, 162, 39, 0.3);
+  z-index: 10;
+}
+
+.book-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Ligne 1 - Plus en haut */
+.row-1 {
+  opacity: 0.6;
+  transform: perspective(1000px) rotateX(5deg);
+}
+
+.row-1 .track-left {
+  animation-duration: 50s;
+}
+
+/* Ligne 2 - Centre, plus visible */
+.row-2 {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.row-2 .book-card {
+  width: 170px;
+  height: 230px;
+}
+
+.row-2 .track-right {
+  animation-duration: 45s;
+}
+
+/* Ligne 3 - Plus en bas */
+.row-3 {
+  opacity: 0.6;
+  transform: perspective(1000px) rotateX(-5deg);
+}
+
+.row-3 .track-left {
+  animation-duration: 55s;
+}
+
+/* Overlay pour assombrir et créer de la profondeur */
+.book-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(
+      ellipse at center,
+      rgba(26, 26, 46, 0.3) 0%,
+      rgba(26, 26, 46, 0.7) 50%,
+      rgba(26, 26, 46, 0.95) 100%
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Effet de brillance qui passe sur les livres */
+.book-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 162, 39, 0.05) 50%,
+    transparent 100%
+  );
+  animation: shine 8s ease-in-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.row-2::before {
+  animation-delay: 2s;
+}
+
+.row-3::before {
+  animation-delay: 4s;
+}
+
+@keyframes shine {
+  0%, 100% {
+    left: -100%;
+  }
+  50% {
+    left: 200%;
+  }
+}
+
+/* Pause animation au survol */
+.book-background:hover .book-track {
+  animation-play-state: paused;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .book-card {
+    width: 100px;
+    height: 140px;
+  }
+  
+  .row-2 .book-card {
+    width: 120px;
+    height: 160px;
+  }
+  
+  .book-track {
+    gap: 15px;
+  }
+}

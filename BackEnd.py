@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS # Très important pour que ton pote puisse se connecter
+from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
-CORS(app) # Autorise les requêtes provenant d'autres domaines
+CORS(app)
 
 def get_db():
     return mysql.connector.connect(
@@ -41,7 +41,6 @@ def get_similar(book_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)
     
-    # On utilise ta table graphe_jaccard que tu es en train de remplir
     query = """
     SELECT l.titre, g.indice_similarite
     FROM graphe_jaccard g

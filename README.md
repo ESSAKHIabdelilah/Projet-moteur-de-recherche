@@ -46,24 +46,27 @@ Ce projet est un **moteur de recherche intelligent** pour une collection de livr
 ## 🔬 Technologies Utilisées
 
 ### Frontend
-| Technologie | Version | Utilisation |
-|-------------|---------|-------------|
-| **React** | 18.2.0 | Framework UI |
-| **CSS3** | - | Animations & Design |
-| **Google Fonts** | - | Playfair Display, Lora |
+
+| Technologie      | Version | Utilisation            |
+| ---------------- | ------- | ---------------------- |
+| **React**        | 18.2.0  | Framework UI           |
+| **CSS3**         | -       | Animations & Design    |
+| **Google Fonts** | -       | Playfair Display, Lora |
 
 ### Backend
-| Technologie | Version | Utilisation |
-|-------------|---------|-------------|
-| **Python** | 3.x | Langage backend |
-| **Flask** | 3.x | API REST |
-| **Flask-CORS** | - | Cross-Origin Requests |
-| **Scikit-learn** | - | Calcul TF-IDF |
+
+| Technologie      | Version | Utilisation           |
+| ---------------- | ------- | --------------------- |
+| **Python**       | 3.x     | Langage backend       |
+| **Flask**        | 3.x     | API REST              |
+| **Flask-CORS**   | -       | Cross-Origin Requests |
+| **Scikit-learn** | -       | Calcul TF-IDF         |
 
 ### Base de Données
-| Technologie | Version | Utilisation |
-|-------------|---------|-------------|
-| **MySQL/MariaDB** | XAMPP | Stockage des données |
+
+| Technologie       | Version | Utilisation          |
+| ----------------- | ------- | -------------------- |
+| **MySQL/MariaDB** | XAMPP   | Stockage des données |
 
 ---
 
@@ -74,6 +77,7 @@ Ce projet est un **moteur de recherche intelligent** pour une collection de livr
 Le **TF-IDF** est une mesure statistique qui évalue l'importance d'un mot dans un document par rapport à une collection de documents.
 
 **Formule :**
+
 ```
 TF-IDF(t,d) = TF(t,d) × IDF(t)
 
@@ -85,6 +89,7 @@ où:
 ```
 
 **Configuration utilisée :**
+
 - Mots de 4+ lettres uniquement
 - Maximum 15 000 features
 - Minimum 2 occurrences dans le corpus
@@ -95,6 +100,7 @@ où:
 La **similarité cosinus** mesure la similarité entre deux documents en calculant le cosinus de l'angle entre leurs vecteurs TF-IDF.
 
 **Formule :**
+
 ```
 cos(θ) = (A · B) / (||A|| × ||B||)
 
@@ -108,6 +114,7 @@ où:
 ### 3. Système de Ranking Hybride
 
 La recherche combine deux facteurs :
+
 ```
 Score Final = (TF-IDF × 0.7) + (Popularité × 0.3)
 ```
@@ -117,57 +124,63 @@ Score Final = (TF-IDF × 0.7) + (Popularité × 0.3)
 ## 🗄️ Structure de la Base de Données
 
 ### Table `Livres`
-| Colonne | Type | Description |
-|---------|------|-------------|
-| id | INT (PK) | Identifiant unique |
-| gutenberg_id | INT | ID Projet Gutenberg |
-| titre | VARCHAR(255) | Titre du livre |
-| contenu | LONGTEXT | Texte complet |
-| nb_mots | INT | Nombre de mots |
+
+| Colonne      | Type         | Description         |
+| ------------ | ------------ | ------------------- |
+| id           | INT (PK)     | Identifiant unique  |
+| gutenberg_id | INT          | ID Projet Gutenberg |
+| titre        | VARCHAR(255) | Titre du livre      |
+| contenu      | LONGTEXT     | Texte complet       |
+| nb_mots      | INT          | Nombre de mots      |
 
 ### Table `Index_Inverse`
-| Colonne | Type | Description |
-|---------|------|-------------|
-| id | INT (PK) | Identifiant unique |
-| mot | VARCHAR(100) | Mot indexé |
-| livre_id | INT (FK) | Référence au livre |
-| nb_occurrences | INT | Fréquence du mot |
-| tfidf_final | FLOAT | Score TF-IDF |
+
+| Colonne        | Type         | Description        |
+| -------------- | ------------ | ------------------ |
+| id             | INT (PK)     | Identifiant unique |
+| mot            | VARCHAR(100) | Mot indexé         |
+| livre_id       | INT (FK)     | Référence au livre |
+| nb_occurrences | INT          | Fréquence du mot   |
+| tfidf_final    | FLOAT        | Score TF-IDF       |
 
 ### Table `Graphe_Jaccard`
-| Colonne | Type | Description |
-|---------|------|-------------|
-| livre_1_id | INT (FK) | Premier livre |
-| livre_2_id | INT (FK) | Second livre |
-| indice_similarite | FLOAT | Score de similarité |
+
+| Colonne           | Type     | Description         |
+| ----------------- | -------- | ------------------- |
+| livre_1_id        | INT (FK) | Premier livre       |
+| livre_2_id        | INT (FK) | Second livre        |
+| indice_similarite | FLOAT    | Score de similarité |
 
 ### Table `Stats_Clicks`
-| Colonne | Type | Description |
-|---------|------|-------------|
-| livre_id | INT (FK) | Livre cliqué |
-| nb_clics | INT | Nombre de clics |
+
+| Colonne  | Type     | Description     |
+| -------- | -------- | --------------- |
+| livre_id | INT (FK) | Livre cliqué    |
+| nb_clics | INT      | Nombre de clics |
 
 ---
 
 ## 📈 Statistiques du Projet
 
-| Métrique | Valeur |
-|----------|--------|
-| 📚 Nombre de livres | **644** |
+| Métrique                 | Valeur        |
+| ------------------------ | ------------- |
+| 📚 Nombre de livres      | **644**       |
 | 📝 Entrées index inverse | **7 299 560** |
-| 🔗 Paires de similarité | **1 236 533** |
-| 📖 Mots min. par livre | **10 000+** |
+| 🔗 Paires de similarité  | **1 236 533** |
+| 📖 Mots min. par livre   | **10 000+**   |
 
 ---
 
 ## 🚀 Installation & Lancement
 
 ### Prérequis
+
 - Node.js 16+
 - Python 3.8+
 - XAMPP (MySQL/MariaDB)
 
 ### 1. Base de Données
+
 ```bash
 # Démarrer XAMPP (Apache + MySQL)
 # Importer la base via phpMyAdmin ou ligne de commande
@@ -175,19 +188,23 @@ mysql -u root bd_des_livres < bd_des_livres.sql
 ```
 
 ### 2. Backend Flask
+
 ```bash
 cd Projet-moteur-de-recherche
 pip install flask flask-cors mysql-connector-python
 python BackEnd.py
 ```
+
 Le serveur démarre sur `http://localhost:5000`
 
 ### 3. Frontend React
+
 ```bash
 cd frontend
 npm install
 npm start
 ```
+
 L'application s'ouvre sur `http://localhost:3000`
 
 ---
@@ -195,16 +212,19 @@ L'application s'ouvre sur `http://localhost:3000`
 ## 🎨 Fonctionnalités de l'Interface
 
 ### Page Principale
+
 - 🔍 **Barre de recherche** avec design élégant
 - 📖 **Background animé** avec livres défilants
 - ✨ **Animations fluides** sur les interactions
 
 ### Résultats de Recherche
+
 - 📋 **Liste des livres** correspondants au mot-clé
 - 📊 **Score de pertinence** TF-IDF affiché
 - 👆 **Compteur de clics** (popularité)
 
 ### Recommandations
+
 - 📚 **Livres similaires** basés sur le contenu
 - 📈 **Indice de similarité** en pourcentage
 - 🪟 **Modal animé** pour l'affichage

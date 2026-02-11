@@ -62,9 +62,9 @@ function App() {
         <header className="header">
           <h1 className="title">
             <span className="icon">📚</span>
-            La Bibliothèque Enchantée
+            Library of the jungle 
           </h1>
-          <p className="subtitle">Explorez notre collection de livres classiques</p>
+          <p className="subtitle">Explore our classic books</p>
           <div className="library-decoration">
             <span className="book-deco">📖</span>
             <span className="book-deco">📕</span>

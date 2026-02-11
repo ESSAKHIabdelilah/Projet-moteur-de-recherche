@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
+from flasgger import Swagger
 
 app = Flask(__name__)
 CORS(app)
+swagger = Swagger(app)
 
 def get_db():
     return mysql.connector.connect(
@@ -15,6 +17,19 @@ def get_db():
 
 @app.route('/api/search', methods=['GET'])
 def search():
+    """
+    Recherche simple par mot-clef
+    ---
+    parameters:
+      - name: q
+        in: query
+        type: string
+        required: true
+        description: Le mot recherché
+    responses:
+      200:
+        description: Liste des livres triés par TF-IDF et clics
+    """
     keyword = request.args.get('q', '').lower()
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -32,15 +47,24 @@ def search():
     db.close()
     return jsonify(results)
 
-# --- NOUVELLE ROUTE : RECHERCHE REGEX ---
 @app.route('/api/search_regex', methods=['GET'])
 def search_regex():
+    """
+    Recherche avancée par Expression Régulière (RegEx)
+    ---
+    parameters:
+      - name: q
+        in: query
+        type: string
+        required: true
+        description: L'expression régulière (ex. ^war)
+    responses:
+      200:
+        description: Liste des livres dont l'index correspond au motif
+    """
     pattern = request.args.get('q', '')
     db = get_db()
     cursor = db.cursor(dictionary=True)
-    
-    # On cherche les mots de l'index qui correspondent à la RegEx
-    # On trie par la somme des TF-IDF pour rester pertinent
     query = """
     SELECT l.id, l.titre, SUM(i.tfidf_final) as score_total, IFNULL(s.nb_clics, 0) as clics
     FROM index_inverse i
@@ -55,13 +79,25 @@ def search_regex():
         cursor.execute(query, (pattern,))
         results = cursor.fetchall()
     except:
-        results = [] # En cas de RegEx invalide tapée par l'utilisateur
-    
+        results = []
     db.close()
     return jsonify(results)
 
 @app.route('/api/similar/<int:book_id>', methods=['GET'])
 def get_similar(book_id):
+    """
+    Suggestion de livres similaires (Graphe de Jaccard)
+    ---
+    parameters:
+      - name: book_id
+        in: path
+        type: integer
+        required: true
+        description: ID du livre de référence
+    responses:
+      200:
+        description: Top 10 des livres voisins dans le graphe
+    """
     db = get_db()
     cursor = db.cursor(dictionary=True)
     query = """
@@ -78,4 +114,4 @@ def get_similar(book_id):
     return jsonify(recommendations)
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)  
+    app.run(port=5000, debug=True)

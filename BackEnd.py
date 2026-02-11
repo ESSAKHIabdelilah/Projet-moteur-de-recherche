@@ -15,6 +15,7 @@ def get_db():
         database="bd_des_livres"
     )
 
+# --- 1. RECHERCHE SIMPLE ---
 @app.route('/api/search', methods=['GET'])
 def search():
     """
@@ -47,6 +48,7 @@ def search():
     db.close()
     return jsonify(results)
 
+# --- 2. RECHERCHE REGEX ---
 @app.route('/api/search_regex', methods=['GET'])
 def search_regex():
     """
@@ -83,6 +85,35 @@ def search_regex():
     db.close()
     return jsonify(results)
 
+# --- 3. ENREGISTRER UN CLIC (Méthode POST) ---
+@app.route('/api/click/<int:book_id>', methods=['POST'])
+def register_click(book_id):
+    """
+    Enregistrer un clic sur un livre (Popularité)
+    ---
+    parameters:
+      - name: book_id
+        in: path
+        type: integer
+        required: true
+        description: ID du livre cliqué
+    responses:
+      200:
+        description: Succès
+    """
+    db = get_db()
+    cursor = db.cursor()
+    query = """
+    INSERT INTO stats_clicks (livre_id, nb_clics) 
+    VALUES (%s, 1) 
+    ON DUPLICATE KEY UPDATE nb_clics = nb_clics + 1
+    """
+    cursor.execute(query, (book_id,))
+    db.commit()
+    db.close()
+    return jsonify({"status": "success"})
+
+# --- 4. LIVRES SIMILAIRES ---
 @app.route('/api/similar/<int:book_id>', methods=['GET'])
 def get_similar(book_id):
     """
@@ -96,7 +127,7 @@ def get_similar(book_id):
         description: ID du livre de référence
     responses:
       200:
-        description: Top 10 des livres voisins dans le graphe
+        description: Top 10 des livres voisins
     """
     db = get_db()
     cursor = db.cursor(dictionary=True)

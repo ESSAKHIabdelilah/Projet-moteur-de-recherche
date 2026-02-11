@@ -3,6 +3,7 @@ import SearchBar from './components/SearchBar';
 import ResultsList from './components/ResultsList';
 import SimilarBooks from './components/SimilarBooks';
 import BookBackground from './components/BookBackground';
+import RegexSearch from './components/RegexSearch';
 import './App.css';
 
 const API_URL = "http://localhost:5000/api";
@@ -15,6 +16,7 @@ function App() {
   const [similarBooks, setSimilarBooks] = useState([]);
   const [showSimilar, setShowSimilar] = useState(false);
   const [selectedBookTitle, setSelectedBookTitle] = useState('');
+  const [activeTab, setActiveTab] = useState('normal');
 
   const handleSearch = async (query) => {
     if (!query.trim()) return;
@@ -74,27 +76,48 @@ function App() {
           </div>
         </header>
 
-        <SearchBar onSearch={handleSearch} loading={loading} />
+        <div className="nav-tabs">
+          <button 
+            className={`nav-tab ${activeTab === 'normal' ? 'active' : ''}`}
+            onClick={() => setActiveTab('normal')}
+          >
+            🔍 Recherche TF-IDF
+          </button>
+          <button 
+            className={`nav-tab ${activeTab === 'regex' ? 'active' : ''}`}
+            onClick={() => setActiveTab('regex')}
+          >
+            🔤 Recherche RegEx
+          </button>
+        </div>
 
-        {error && (
-          <div className="error-message">
-            <span className="error-icon">⚠️</span>
-            {error}
-          </div>
-        )}
+        {activeTab === 'normal' ? (
+          <>
+            <SearchBar onSearch={handleSearch} loading={loading} />
 
-        {loading && (
-          <div className="loading">
-            <div className="spinner"></div>
-            <p>Recherche en cours...</p>
-          </div>
-        )}
+            {error && (
+              <div className="error-message">
+                <span className="error-icon">⚠️</span>
+                {error}
+              </div>
+            )}
 
-        {!loading && searchPerformed && (
-          <ResultsList 
-            results={results} 
-            onGetSimilar={handleGetSimilar} 
-          />
+            {loading && (
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>Recherche en cours...</p>
+              </div>
+            )}
+
+            {!loading && searchPerformed && (
+              <ResultsList 
+                results={results} 
+                onGetSimilar={handleGetSimilar} 
+              />
+            )}
+          </>
+        ) : (
+          <RegexSearch onGetSimilar={handleGetSimilar} />
         )}
 
         {showSimilar && (

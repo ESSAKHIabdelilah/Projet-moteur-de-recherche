@@ -9,34 +9,32 @@ function SearchBar({ onSearch, loading }) {
     onSearch(query);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      onSearch(query);
-    }
-  };
-
   return (
-    <form className="search-bar" onSubmit={handleSubmit}>
-      <div className="search-input-wrapper">
-        <span className="search-icon">�</span>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Rechercher un livre... (ex: adventure, love, science)"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-        />
+    <div className="search-container">
+      <div className="search-header">
+        <h2>🔍 Recherche par Mot-clé</h2>
+        <p className="search-subtitle">Recherchez dans notre collection de livres classiques</p>
       </div>
-      <button 
-        type="submit" 
-        className="search-button"
-        disabled={loading || !query.trim()}
-      >
-        {loading ? '📖 Recherche...' : '📚 Explorer'}
-      </button>
-    </form>
+
+      <form onSubmit={handleSubmit} className="search-form">
+        <div className="input-group">
+          <label htmlFor="keyword">Mot-clé</label>
+          <input
+            type="text"
+            id="keyword"
+            className="search-input"
+            placeholder="Ex: love, adventure, science"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+
+        <button type="submit" className="search-btn" disabled={loading || !query.trim()}>
+          {loading ? '⏳ Recherche...' : '🔍 Rechercher'}
+        </button>
+      </form>
+    </div>
   );
 }
 

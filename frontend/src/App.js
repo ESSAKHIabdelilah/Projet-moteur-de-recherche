@@ -81,7 +81,7 @@ function App() {
             className={`nav-tab ${activeTab === 'normal' ? 'active' : ''}`}
             onClick={() => setActiveTab('normal')}
           >
-            🔍 Recherche TF-IDF
+            🔍 Recherche
           </button>
           <button 
             className={`nav-tab ${activeTab === 'regex' ? 'active' : ''}`}

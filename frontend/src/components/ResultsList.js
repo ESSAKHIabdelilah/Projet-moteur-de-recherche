@@ -1,5 +1,4 @@
 import React from 'react';
-import ResultCard from './ResultCard';
 import './ResultsList.css';
 
 function ResultsList({ results, onGetSimilar }) {
@@ -14,19 +13,23 @@ function ResultsList({ results, onGetSimilar }) {
   }
 
   return (
-    <div className="results-container">
-      <div className="results-header">
-        <h2 className="results-count">
-          <span className="count-number">{results.length}</span> résultats trouvés
-        </h2>
-      </div>
-      <div className="results-list">
+    <div className="tfidf-results">
+      <h3>📚 Résultats ({results.length} livres trouvés)</h3>
+      <div className="results-grid">
         {results.map((book) => (
-          <ResultCard 
-            key={book.id} 
-            book={book} 
-            onGetSimilar={onGetSimilar} 
-          />
+          <div key={book.id} className="tfidf-result-card">
+            <h4>{book.titre}</h4>
+            <div className="book-meta">
+              <span>📊 Score: {book.tfidf_final?.toFixed(4)}</span>
+              <span>👆 {book.clics || 0} clics</span>
+            </div>
+            <button 
+              className="similar-btn"
+              onClick={() => onGetSimilar(book.id, book.titre)}
+            >
+              📖 Livres similaires
+            </button>
+          </div>
         ))}
       </div>
     </div>
